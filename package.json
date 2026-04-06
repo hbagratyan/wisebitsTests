@@ -1,0 +1,15 @@
+{
+  "name": "wisebitTests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.5.2",
+    "typescript": "^5.5.3"
+  },
+  "private": true
+}
