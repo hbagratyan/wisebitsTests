@@ -1,8 +1,21 @@
-import { test, expect } from '@playwright/test';
+import {test} from '../../fixtures/demoqa/demoqa.fixtures';
+import {expect} from "@playwright/test";
+import {endpoints} from "../../constants/demoqa-constants";
 
-test('Добавление записи в таблицу', async ({ page }) => {
-    await page.goto('https://playwright.dev/');
+test.describe('API проверки создания пользователя, добавления и удаления книг', () => {
 
-    // Expect a title "to contain" a substring.
-    await expect(page).toHaveTitle(/Playwright/);
+    test('Create User Happy Path', async ({request}) => {
+        const response = await request.post(endpoints.createUser)
+        expect(response.status()).toBe(200);
+    });
+
+    test('Add Book Happy Path', async ({request}) => {
+        const response = await request.post(endpoints.addBook)
+        expect(response.status()).toBe(200);
+    });
+
+    test('Delete Book Happy Path', async ({request}) => {
+        const response = await request.delete(endpoints.deleteBook)
+        expect(response.status()).toBe(200);
+    });
 });
