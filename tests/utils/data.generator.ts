@@ -60,17 +60,35 @@ export class DataGenerator {
    * Пример: this.password(); // aB3kL9m!
    */
   password(): string {
-    const specialChars = '!@#$%^&*';
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const digits = '0123456789';
+    const special = '!@#$%^&*';
 
-    const base = faker.internet.password({
-      length: 7, // оставляем место под спецсимвол
-      memorable: false,
-    });
+    const getRandom = (chars: string) =>
+        chars[Math.floor(Math.random() * chars.length)];
 
-    const special =
-        specialChars[faker.number.int({ min: 0, max: specialChars.length - 1 })];
+    // гарантированные символы
+    const required = [
+      getRandom(lower),
+      getRandom(upper),
+      getRandom(digits),
+      getRandom(special),
+    ];
 
-    return base + special + faker.number.int(3);
+    // остальная длина
+    const allChars = lower + upper + digits + special;
+    const remainingLength = 8;
+
+    const rest = Array.from({ length: remainingLength }, () =>
+        getRandom(allChars)
+    );
+
+    // перемешиваем
+    const passwordArray = [...required, ...rest]
+        .sort(() => Math.random() - 0.5);
+
+    return passwordArray.join('');
   }
 
   /**

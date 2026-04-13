@@ -2,8 +2,8 @@ export const base_url = 'https://demoqa.com/'
 
 export const endpoints = {
     createUser: `${base_url}Account/v1/User`,
-    bookActions: `${base_url}BookStore/BookStoreV1Books`,
-    generateToken: `${base_url}BookStore/GenerateToken`
+    bookActions: `${base_url}BookStore/v1/Books`,
+    generateToken: `${base_url}Account/v1/GenerateToken`
 }
 
 export const userInfo = {

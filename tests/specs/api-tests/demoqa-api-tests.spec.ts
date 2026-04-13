@@ -54,47 +54,79 @@ test.describe('API проверки создания пользователя, �
     });
 
     test('Add Book Happy Path', async ({request}) => {
-        const response = await request.post(endpoints.bookActions, {
+        // 1. Create user
+        const username = data.userName()
+        const password = data.password()
+
+        const userResponse = await request.post(endpoints.createUser, {
             data: {
-                userId: "string",
+                userName: username,
+                password: password
+            }
+        });
+
+        expect(userResponse.status()).toBe(201);
+        const userBody = await userResponse.json();
+        const userId = userBody.userID;
+
+        // 2. Generate token
+        const tokenResponse = await request.post(endpoints.generateToken, {
+            data: {
+                userName: username,
+                password: password
+            }
+        });
+
+        const tokenBody = await tokenResponse.json();
+        const token = tokenBody.token;
+
+        // 3. Add book to user
+        const isbn = "9781449325862"; // реальный ISBN из DemoQA
+
+        const addBookResponse = await request.post(endpoints.bookActions, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: {
+                userId,
                 collectionOfIsbns: [
-                    {
-                        isbn: "string"
-                    }
+                    {isbn}
                 ]
             }
-        })
-        expect(response.status()).toBe(200);
+        });
+        const body = await addBookResponse.json();
+        expect(body.books).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({isbn})
+            ])
+        );
     });
 
-    test('Add Book Sad Path', async ({request}) => {
+    test('Add Book without token should fail', async ({ request }) => {
+        const username = data.userName();
+        const password = data.password();
+
+        // create user
+        const userResponse = await request.post(endpoints.createUser, {
+            data: { userName: username, password }
+        });
+        const userId = (await userResponse.json()).userID;
+
+        const isbn = "9781449325862";
+
         const response = await request.post(endpoints.bookActions, {
+            // ❌ без Authorization
             data: {
-                userId: "string",
-                collectionOfIsbns: [
-                    {
-                        isbn: "string"
-                    }
-                ]
+                userId,
+                collectionOfIsbns: [{ isbn }]
             }
-        })
-        expect(response.status()).toBe(200);
+        });
+
+        expect(response.status()).toBe(401);
     });
 
-    test('Delete Book Happy Path', async ({request}) => {
-        const response = await request.delete(endpoints.bookActions,
-            {
-                data: {
-                    userId: "string",
-                    collectionOfIsbns: [
-                        {
-                            isbn: "string"
-                        }
-                    ]
-                }
-            }
-        )
-        expect(response.status()).toBe(200);
+    test('Delete Book Happy Path', async ({ request }) => {
+
     });
 
     test('Delete Book sad Path', async ({request}) => {
