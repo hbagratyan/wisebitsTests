@@ -24,6 +24,10 @@ export class WebTablesPage extends BasePage {
         return new Button(this.page.locator('[id="addNewRecordButton"]'), "Кнопка добавления записи в таблицу");
     }
 
+    get searchField(): Input {
+        return new Input(this.page.locator(`[id="searchBox"]`), "Поле поиска записей в таблице");
+    }
+
     // Элементы модалки ввода данных пользователя в форме регистрации
 
     get registrationFormTitle(): Block {

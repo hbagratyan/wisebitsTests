@@ -4,13 +4,13 @@ import {MainPage} from "../../page-objects/demoqa/main-page";
 import {WebTablesPage} from "../../page-objects/demoqa/web-tables-page";
 import {base_url} from "../../constants/demoqa-constants";
 
-interface DemoqaFixtures {
+interface DemoqaUiFixtures {
     mainPage: MainPage;
     webTablesPage: WebTablesPage;
     authInit: AuthInit;
 }
 
-export const test = base.extend<DemoqaFixtures>({
+export const test = base.extend<DemoqaUiFixtures>({
     authInit: [
         async ({browser}, use): Promise<void> => {
             const authInit = await AuthInit.create(browser);
